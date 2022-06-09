@@ -108,27 +108,3 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      # Create GitHub release once images have been pushed
-      - name: Create a GitHub release ${{ steps.tag_version.outputs.new_tag }}
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-          prerelease: contains( ${{ steps.tag_version.outputs.release_type }} , 'pre' )
-
-      # Build Go Release
-      - run: git tag ${{ steps.tag_version.outputs.new_tag }}
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.16
-      - name: Run GoReleaser ${{ steps.tag_version.outputs.new_tag }}
-        uses: goreleaser/goreleaser-action@v2
-        with:
-          version: latest
-          args: release
-          workdir: ./cmd/infrared/.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
