@@ -102,6 +102,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/arm64
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
